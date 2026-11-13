@@ -1,0 +1,59 @@
+Test Case ID,Description,Pre-Condition,Test Steps,Test Data,Expected Result,Actual Result,Status,Prioritas,Teknik
+TC-LOG-01,Login dengan email dan password valid,User berada di halaman Login. Akun A aktif,"1. Input email
+2. Input password
+3. Klik tombol Login","Email: qa.user01@mail.com
+Password: Qa@12345",User berhasil login dan diarahkan ke halaman Home,,Not Run,High,Positive test
+TC-LOG-02,Login dengan password salah,User berada di halaman Login. Akun A aktif,"1. Input email
+2. Input password salah
+3. Klik tombol Login","Email: qa.user01@mail.com
+Password: Salah@123","Login gagal, muncul pesan ""Email atau password salah"", user tetap di halaman Login",,Not Run,High,"Negative test, Decision Table (R2)"
+TC-LOG-03,Login dengan email tidak terdaftar,User berada di halaman Login,"1. Input email tidak terdaftar
+2. Input password
+3. Klik tombol Login","Email: unknown.user@mail.com
+Password: Qa@12345","Login gagal, muncul pesan yang sama persis dengan TC-LOG-02: ""Email atau password salah""",,Not Run,High,"Negative test, Decision Table (R3)"
+TC-LOG-04,Login dengan password 7 karakter (di bawah batas minimum),User berada di halaman Login. Akun A aktif,"1. Input email
+2. Input password 7 karakter
+3. Klik tombol Login","Email: qa.user01@mail.com
+Password: Qa@1234 (7 karakter)","Login ditolak, muncul pesan error (validasi minimal 8 karakter atau ""Email atau password salah""), user tetap di halaman Login",,Not Run,Medium,BVA (batas bawah - 1)
+TC-LOG-05,Login dengan password tepat 8 karakter (batas minimum),User berada di halaman Login. Akun A (password 8 karakter) aktif,"1. Input email
+2. Input password 8 karakter
+3. Klik tombol Login","Email: qa.user01@mail.com
+Password: Qa@12345 (8 karakter)",User berhasil login dan diarahkan ke halaman Home,,Not Run,Medium,BVA (batas bawah)
+TC-LOG-06,Login dengan password 9 karakter (di atas batas minimum),User berada di halaman Login. Akun B (password 9 karakter) aktif,"1. Input email
+2. Input password 9 karakter
+3. Klik tombol Login","Email: qa.user02@mail.com
+Password: Qa@123456 (9 karakter)",User berhasil login dan diarahkan ke halaman Home,,Not Run,Medium,BVA (batas bawah + 1)
+TC-LOG-07,Akun terkunci setelah 3 kali salah password,User berada di halaman Login. Akun C aktif dan belum pernah salah login,"1. Input email Akun C dan password salah, klik Login (percobaan 1)
+2. Ulangi langkah 1 (percobaan 2)
+3. Ulangi langkah 1 (percobaan 3)
+4. Perhatikan pesan yang muncul","Email: qa.user03@mail.com
+Password salah: Salah@123","Percobaan 1 dan 2: muncul ""Email atau password salah"". Percobaan 3: akun terkunci, muncul pesan ""Akun terkunci, hubungi tim teknis""",,Not Run,High,State Transition
+TC-LOG-08,Akun terkunci tetap tidak bisa login walau password benar,Akun C dalam kondisi terkunci (hasil TC-LOG-07),"1. Buka halaman Login
+2. Input email Akun C
+3. Input password benar
+4. Klik tombol Login","Email: qa.user03@mail.com
+Password: Lock@1234","Login ditolak, muncul pesan ""Akun terkunci, hubungi tim teknis""",,Not Run,High,State Transition (transisi tidak valid)
+TC-LOG-09,Login dengan field email kosong,User berada di halaman Login,"1. Biarkan field email kosong
+2. Input password
+3. Klik tombol Login","Email: (kosong)
+Password: Qa@12345","Login gagal, muncul validasi ""Email wajib diisi"", user tetap di halaman Login",,Not Run,High,EP (kelompok kosong)
+TC-LOG-10,Login dengan field password kosong,User berada di halaman Login,"1. Input email
+2. Biarkan field password kosong
+3. Klik tombol Login","Email: qa.user01@mail.com
+Password: (kosong)","Login gagal, muncul validasi ""Password wajib diisi"", user tetap di halaman Login",,Not Run,High,EP (kelompok kosong)
+TC-LOG-11,Login dengan email hanya berisi spasi,User berada di halaman Login,"1. Input email berupa spasi saja
+2. Input password
+3. Klik tombol Login","Email: ""   "" (3 spasi)
+Password: Qa@12345","Login gagal, muncul validasi ""Masukkan alamat email yang valid"", user tetap di halaman Login",,Not Run,Medium,Error Guessing
+TC-LOG-12,Login dengan format email tanpa tanda @,User berada di halaman Login,"1. Input email tanpa @
+2. Input password
+3. Klik tombol Login","Email: qa.user01mail.com
+Password: Qa@12345","Login gagal, muncul validasi format email, user tetap di halaman Login",,Not Run,Medium,EP (format invalid)
+TC-LOG-13,Login dengan input SQL injection,User berada di halaman Login,"1. Input email berisi SQL injection
+2. Input password
+3. Klik tombol Login","Email: ' OR 1=1 --
+Password: apapun123","Login ditolak. Tidak ada error server (500), tidak ada bocoran pesan database, dan user tidak berhasil masuk",,Not Run,High,Error Guessing (security)
+TC-LOG-14,Login dengan input script (XSS sederhana),User berada di halaman Login,"1. Input email berisi tag script
+2. Input password
+3. Klik tombol Login","Email: <script>alert(1)</script>
+Password: Qa@12345",Input ditolak sebagai email tidak valid. Pop-up alert tidak muncul,,Not Run,Medium,Error Guessing (security)
